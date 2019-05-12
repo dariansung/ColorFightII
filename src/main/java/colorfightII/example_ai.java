@@ -28,8 +28,8 @@ public class example_ai {
         	//String room = "public3";
         	//String room = "uwu";
         	game.connect( room );
-            String username = "BranDairy";
-            String password = "asdf";
+            String username = "RDJ's Contract";
+            String password = "ily3000";
 
             // game.register should return True if succeed.
             // As no duplicate usernames are allowed, a random integer string is appended
@@ -46,7 +46,7 @@ public class example_ai {
             ArrayList<Position> my_attack_list = new ArrayList<>();
             
             boolean firstTurn = true;
-            int threshold = 100;
+            int threshold = 50;
             int homeX = -1;
             int homeY = -1;
 
