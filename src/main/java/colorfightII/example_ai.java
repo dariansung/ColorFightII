@@ -24,9 +24,9 @@ public class example_ai {
             // Connect to the server. This will connect to the public room. If you want to
             // join other rooms, you need to change the argument.
             
-        	String room = "test-run1";
+        	//String room = "test-run1";
         	//String room = "public3";
-        	//String room = "uwu";
+        	String room = "victor";
         	game.connect( room );
             String username = "RDJ's Contract";
             String password = "ily3000";
@@ -89,30 +89,36 @@ public class example_ai {
                 }
                 
                 int numCells = game.me.cells.size();
+                int numEmpty = 0;
+                for(MapCell cell:game.me.cells){
+                	if(cell.is_empty)
+                		numEmpty++;
+                }
                 
                 // game.me.cells is a Arraylist of MapCells.
                 // The outer loop gets all my cells.
                 for ( MapCell cell:game.me.cells ) {
                 	
                 	int numAdjacent = cell.position.get_surrounding_cardinals().length;
+                	// Randomizes order
                 	Integer[] randInts = new Integer[numAdjacent];
                 	for(int i = 0; i < numAdjacent; i++)
                 		randInts[i] = i;
                 	Collections.shuffle(Arrays.asList(randInts));
                 	
                 	// The inner loop checks the surrounding positions.
-                	for (int i = 0; i < numAdjacent; i++ ) {
+                	for (int i = 0; i < numAdjacent; i++) {
                 		// Get the MapCell object of that position
-                    	int rand = randInts[i];
-                		Position pos = cell.position.get_surrounding_cardinals()[rand];
+                		Position pos = cell.position.get_surrounding_cardinals()[i];
                 		MapCell c = game.game_map.get_cell( pos );
-                    	
                     	
                         // Attack if the cost is less than what I have, and the owner
                         // is not mine, and I have not attacked it in this round already
-                        if ( ( c.owner != game.uid ) &&
-                        	 (c.attack_cost < game.me.energy ) &&
-                             ( !my_attack_list.contains( c.position ) ) ) {
+                        if ( (c.attack_cost < game.me.energy ) &&
+                             ( !my_attack_list.contains( c.position )) &&
+                             ( (me.gold >= numCells/200) && 
+                               (me.energy >= numCells/200) &&
+                               (c.owner != game.uid) ) ) {
                             // Add the attack command in the command list
                             // Subtract the attack cost manually so I can keep track
                             // of the energy I have.
@@ -135,7 +141,7 @@ public class example_ai {
                             ( cell.building.upgrade_gold < me.gold ) &&
                             ( cell.building.upgrade_energy < me.energy ) ) {
                     	
-                    	if(( numCells > threshold)){	
+                    	if(true){	
                             cmd_list.add( game.upgrade( cell.position ) );
                             System.out.println( "we upgraded {"+cell.position.x+","+cell.position.y+"}" );
                             me.gold -= cell.building.upgrade_gold;
@@ -165,16 +171,23 @@ public class example_ai {
 	                        
 	                        boolean buildThisTurn = true;
 	                        
-	                        if(nearEnemy && numFortresses <= 1){
-	                        	// If near enemy, build fortress to lower enemy resistance
-	                        	building = Constants.BLD_FORTRESS;
+	                        if(cell.natural_energy >= 8){
+	                        	building = Constants.BLD_GOLD_MINE;
 	                        }
-	                        else if(cell.natural_energy > 3){
-	                        	// Only build well if there is enough natural energy
+	                        else if(cell.natural_energy >= 4){
 	                        	building = Constants.BLD_ENERGY_WELL;
 	                        }
-	                        else if(cell.natural_gold > 3){
+	                        else if(nearEnemy){
+	                        	building = Constants.BLD_FORTRESS;
+	                        }
+	                        else if(cell.natural_gold >= 3){
 	                        	building = Constants.BLD_GOLD_MINE;
+	                        }
+	                        else if(cell.natural_energy >= 3){
+	                        	building = Constants.BLD_ENERGY_WELL;
+	                        }
+	                        else if(me.gold > 1000){
+	                        	building = Constants.BLD_FORTRESS;
 	                        }
 	                        else{
 	                        	if(numCells < threshold)

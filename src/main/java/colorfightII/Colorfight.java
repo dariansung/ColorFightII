@@ -42,7 +42,7 @@ public class Colorfight {
         turn = ( (Long) info.get("turn") ).intValue();
         error = (Map<Integer, Object>) info.get("error");
         max_turn = ( (Long) ( (JSONObject)info.get("info") ).get("max_turn") ).intValue();
-        round_time = ( (Double) ( (JSONObject) info.get("info") ).get("round_time") ).intValue();
+        round_time = ( (Long) ( (JSONObject) info.get("info") ).get("round_time") ).intValue();
 
         game_map = new GameMap(
                 ( (Long) ( (JSONObject)info.get("info") ).get("width") ).intValue(),
